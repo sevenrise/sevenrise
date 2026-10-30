@@ -2,108 +2,175 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SevenRise | SVR</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SevenRise | SVR Ecosystem</title>
 
 <style>
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+ margin:0;
+ padding:0;
+ box-sizing:border-box;
 }
 
 body {
-  background: #080b14;
-  color: white;
-  font-family: Arial, sans-serif;
+ background:#070b16;
+ color:white;
+ font-family:Arial,sans-serif;
 }
 
 header {
-  padding: 22px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 1px solid #222b40;
+ padding:20px;
+ background:#0c1425;
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ border-bottom:1px solid #183454;
 }
 
 .logo {
-  color: #00d9ff;
-  font-size: 27px;
-  font-weight: bold;
-}
-
-nav a {
-  color: white;
-  text-decoration: none;
-  margin-left: 15px;
-  font-size: 13px;
-}
-
-.hero {
-  text-align: center;
-  padding: 100px 20px;
-  background: radial-gradient(circle, #102b49, #080b14 70%);
-}
-
-.hero h1 {
-  font-size: 48px;
-  color: #00d9ff;
-  margin-bottom: 20px;
-}
-
-.hero p {
-  color: #b5c5d9;
-  line-height: 1.8;
-}
-
-button {
-  margin-top: 30px;
-  padding: 15px 30px;
-  background: #00cfff;
-  border: none;
-  border-radius: 8px;
-  font-weight: bold;
-  cursor: pointer;
+ font-size:23px;
+ font-weight:bold;
+ color:#00d9ff;
 }
 
 .container {
-  padding: 50px 20px;
-  max-width: 1000px;
-  margin: auto;
+ max-width:1000px;
+ margin:auto;
+ padding:20px;
 }
 
-h2 {
-  color: #00d9ff;
-  margin-bottom: 25px;
+.hero {
+ background:linear-gradient(135deg,#102b50,#07101e);
+ padding:30px;
+ border-radius:18px;
+ text-align:center;
+ margin-top:20px;
+ border:1px solid #15517c;
+}
+
+.hero h1 {
+ color:#00d9ff;
+ font-size:34px;
+}
+
+.hero p {
+ color:#9eb5cc;
+ margin-top:10px;
+}
+
+.balance {
+ margin-top:25px;
+ font-size:35px;
+ font-weight:bold;
+ color:#00e5ff;
+}
+
+.label {
+ color:#9eb5cc;
+ margin-top:5px;
 }
 
 .cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fit,minmax(200px,1fr));
-  gap: 20px;
+ display:grid;
+ grid-template-columns:repeat(2,1fr);
+ gap:15px;
+ margin-top:20px;
 }
 
 .card {
-  background: #111a2b;
-  padding: 25px;
-  border: 1px solid #263b56;
-  border-radius: 12px;
+ background:#101b2d;
+ border:1px solid #1c3855;
+ padding:20px;
+ border-radius:14px;
 }
 
 .card h3 {
-  color: #00d9ff;
-  margin-bottom: 15px;
+ color:#00d9ff;
+ margin-bottom:12px;
+ font-size:16px;
 }
 
 .card p {
-  color: #c1ccda;
+ color:#b7c7d9;
+ font-size:14px;
+}
+
+button {
+ width:100%;
+ padding:13px;
+ margin-top:15px;
+ background:#00cfff;
+ border:0;
+ border-radius:9px;
+ color:#00101c;
+ font-weight:bold;
+ font-size:14px;
+ cursor:pointer;
+}
+
+button:disabled {
+ background:#34465b;
+ color:#9eacba;
+ cursor:not-allowed;
+}
+
+.section {
+ margin-top:30px;
+}
+
+.section h2 {
+ color:#00d9ff;
+ margin-bottom:15px;
+}
+
+.stat {
+ display:flex;
+ justify-content:space-between;
+ margin-top:12px;
+ color:#b7c7d9;
+ font-size:14px;
+}
+
+nav {
+ position:fixed;
+ bottom:0;
+ left:0;
+ width:100%;
+ background:#101a2b;
+ display:flex;
+ justify-content:space-around;
+ padding:15px 5px;
+ border-top:1px solid #25405c;
+ z-index:10;
+}
+
+nav a {
+ color:#a9bed4;
+ text-decoration:none;
+ font-size:12px;
 }
 
 footer {
-  text-align: center;
-  padding: 30px;
-  color: #8190a5;
-  border-top: 1px solid #263b56;
+ text-align:center;
+ padding:40px 10px 100px;
+ color:#70849b;
+ font-size:12px;
+}
+
+input {
+ width:100%;
+ padding:13px;
+ background:#07101e;
+ border:1px solid #25405c;
+ border-radius:8px;
+ color:white;
+ margin-top:12px;
+}
+
+@media(min-width:700px) {
+ .cards {
+  grid-template-columns:repeat(3,1fr);
+ }
 }
 </style>
 </head>
@@ -111,88 +178,180 @@ footer {
 <body>
 
 <header>
-  <div class="logo">7R SEVENRISE</div>
-  <nav>
-    <a href="#about">About</a>
-    <a href="#token">Token</a>
-    <a href="#roadmap">Roadmap</a>
-  </nav>
+ <div class="logo">7R SEVENRISE</div>
+ <div style="color:#00d9ff">● SVR</div>
 </header>
 
-<section class="hero">
-  <h1>SEVENRISE</h1>
-  <p>The Future Begins With SevenRise.</p>
-  <p>Building a Digital Ecosystem on TON Blockchain.</p>
-  <button onclick="document.getElementById('token').scrollIntoView({behavior:'smooth'})">
-    Explore SVR
-  </button>
+<div class="container">
+
+<section class="hero" id="home">
+
+ <h1>SEVENRISE</h1>
+
+ <p>Welcome to the SevenRise Ecosystem</p>
+
+ <div class="label">YOUR TOTAL POINTS</div>
+
+ <div class="balance" id="balance">0</div>
+
+ <p>SVR Points</p>
+
+ <button onclick="showProfile()">
+ MY ACCOUNT
+ </button>
+
 </section>
 
-<section class="container" id="about">
-  <h2>About SevenRise</h2>
-  <p>
-    SevenRise is a digital ecosystem project designed
-    to connect users through blockchain technology,
-    digital assets and decentralized applications.
-  </p>
+<section class="section">
+
+<h2>📊 Dashboard</h2>
+
+<div class="cards">
+
+<div class="card">
+<h3>Mining</h3>
+<p>Earn 50 points every 24 hours.</p>
+<button id="mineBtn" onclick="startMining()">START MINING</button>
+<p id="miningStatus">Mining inactive</p>
+</div>
+
+<div class="card">
+<h3>Daily Check-in</h3>
+<p>Collect 10 points every day.</p>
+<button id="dailyBtn" onclick="dailyCheck()">CHECK IN</button>
+<p id="dailyStatus">Daily reward available</p>
+</div>
+
+<div class="card">
+<h3>Airdrop</h3>
+<p>Complete activities to earn points.</p>
+<button onclick="showTasks()">VIEW TASKS</button>
+</div>
+
+<div class="card">
+<h3>Referral</h3>
+<p>Invite friends and earn rewards.</p>
+<button onclick="copyReferral()">COPY INVITE LINK</button>
+<p id="referralCode"></p>
+</div>
+
+<div class="card">
+<h3>TON Wallet</h3>
+<p>Connect your TON wallet.</p>
+<button onclick="connectWallet()">CONNECT WALLET</button>
+<p id="walletStatus">Not connected</p>
+</div>
+
+<div class="card">
+<h3>SVR Token</h3>
+<p>Maximum supply</p>
+<div class="balance" style="font-size:23px">
+100M
+</div>
+<p>SVR</p>
+</div>
+
+</div>
+
 </section>
 
-<section class="container" id="token">
-  <h2>SVR Tokenomics</h2>
+<section class="section" id="tasks">
 
-  <div class="cards">
-    <div class="card">
-      <h3>Token Name</h3>
-      <p>SevenRise</p>
-    </div>
+<h2>🎁 Airdrop Tasks</h2>
 
-    <div class="card">
-      <h3>Symbol</h3>
-      <p>SVR</p>
-    </div>
+<div class="card">
+<h3>Daily Reward</h3>
+<p>Complete daily check-in.</p>
+<p>Reward: 10 Points</p>
+</div>
 
-    <div class="card">
-      <h3>Blockchain</h3>
-      <p>TON</p>
-    </div>
+<div class="card" style="margin-top:12px">
+<h3>Community Task</h3>
+<p>Visit the official SevenRise Telegram community.</p>
+<button onclick="window.open('https://t.me/sevenrise','_blank')">
+ OPEN TELEGRAM
+</button>
+<p>Reward verification is not yet activated.</p>
+</div>
 
-    <div class="card">
-      <h3>Maximum Supply</h3>
-      <p>100,000,000 SVR</p>
-    </div>
-  </div>
 </section>
 
-<section class="container" id="roadmap">
-  <h2>Roadmap</h2>
+<section class="section" id="referrals">
 
-  <div class="cards">
-    <div class="card">
-      <h3>Phase 1</h3>
-      <p>Website Development</p>
-    </div>
+<h2>👥 Referral Program</h2>
 
-    <div class="card">
-      <h3>Phase 2</h3>
-      <p>Telegram Mini App</p>
-    </div>
+<div class="card">
+<h3>Your Referral Code</h3>
+<p id="codeDisplay">Loading...</p>
 
-    <div class="card">
-      <h3>Phase 3</h3>
-      <p>TON Wallet Integration</p>
-    </div>
+<button onclick="copyReferral()">
+COPY REFERRAL LINK
+</button>
 
-    <div class="card">
-      <h3>Phase 4</h3>
-      <p>SVR Token Launch</p>
-    </div>
-  </div>
+<p style="margin-top:15px">
+Reward: 100 points per verified referral.
+</p>
+
+<p style="margin-top:10px">
+Referral verification is not yet activated.
+</p>
+</div>
+
 </section>
+
+<section class="section" id="wallet">
+
+<h2>💎 TON Wallet</h2>
+
+<div class="card">
+<h3>Wallet Connection</h3>
+<p>Connect your TON wallet when the TON Connect integration is activated.</p>
+<button onclick="connectWallet()">CONNECT TON WALLET</button>
+<p id="walletInfo" style="margin-top:12px">
+Wallet integration pending.
+</p>
+</div>
+
+</section>
+
+<section class="section" id="profile">
+
+<h2>👤 User Profile</h2>
+
+<div class="card">
+<h3>SevenRise Member</h3>
+<div class="stat">
+<span>Username</span>
+<span>Guest User</span>
+</div>
+
+<div class="stat">
+<span>Total Points</span>
+<span id="profileBalance">0</span>
+</div>
+
+<div class="stat">
+<span>Mining Reward</span>
+<span>50 / 24h</span>
+</div>
+
+<div class="stat">
+<span>Daily Reward</span>
+<span>10 Points</span>
+</div>
+</div>
+
+</section>
+
+</div>
 
 <footer>
-  <p>© 2026 SevenRise (SVR)</p>
-  <p>Powered by TON Ecosystem</p>
+<p>© 2026 SevenRise Ecosystem</p>
+<p>Powered by TON Blockchain</p>
+<p>SVR Digital Ecosystem</p>
 </footer>
 
-</body>
-  </html>
+<nav>
+<a href="#home">🏠 Home</a>
+<a href="#tasks">🎁 Airdrop</a>
+<a href
