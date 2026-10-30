@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SevenRise | SVR</title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: #080b14;
+  color: white;
+  font-family: Arial, sans-serif;
+}
+
+header {
+  padding: 22px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #222b40;
+}
+
+.logo {
+  color: #00d9ff;
+  font-size: 27px;
+  font-weight: bold;
+}
+
+nav a {
+  color: white;
+  text-decoration: none;
+  margin-left: 15px;
+  font-size: 13px;
+}
+
+.hero {
+  text-align: center;
+  padding: 100px 20px;
+  background: radial-gradient(circle, #102b49, #080b14 70%);
+}
+
+.hero h1 {
+  font-size: 48px;
+  color: #00d9ff;
+  margin-bottom: 20px;
+}
+
+.hero p {
+  color: #b5c5d9;
+  line-height: 1.8;
+}
+
+button {
+  margin-top: 30px;
+  padding: 15px 30px;
+  background: #00cfff;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.container {
+  padding: 50px 20px;
+  max-width: 1000px;
+  margin: auto;
+}
+
+h2 {
+  color: #00d9ff;
+  margin-bottom: 25px;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(200px,1fr));
+  gap: 20px;
+}
+
+.card {
+  background: #111a2b;
+  padding: 25px;
+  border: 1px solid #263b56;
+  border-radius: 12px;
+}
+
+.card h3 {
+  color: #00d9ff;
+  margin-bottom: 15px;
+}
+
+.card p {
+  color: #c1ccda;
+}
+
+footer {
+  text-align: center;
+  padding: 30px;
+  color: #8190a5;
+  border-top: 1px solid #263b56;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">7R SEVENRISE</div>
+  <nav>
+    <a href="#about">About</a>
+    <a href="#token">Token</a>
+    <a href="#roadmap">Roadmap</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <h1>SEVENRISE</h1>
+  <p>The Future Begins With SevenRise.</p>
+  <p>Building a Digital Ecosystem on TON Blockchain.</p>
+  <button onclick="document.getElementById('token').scrollIntoView({behavior:'smooth'})">
+    Explore SVR
+  </button>
+</section>
+
+<section class="container" id="about">
+  <h2>About SevenRise</h2>
+  <p>
+    SevenRise is a digital ecosystem project designed
+    to connect users through blockchain technology,
+    digital assets and decentralized applications.
+  </p>
+</section>
+
+<section class="container" id="token">
+  <h2>SVR Tokenomics</h2>
+
+  <div class="cards">
+    <div class="card">
+      <h3>Token Name</h3>
+      <p>SevenRise</p>
+    </div>
+
+    <div class="card">
+      <h3>Symbol</h3>
+      <p>SVR</p>
+    </div>
+
+    <div class="card">
+      <h3>Blockchain</h3>
+      <p>TON</p>
+    </div>
+
+    <div class="card">
+      <h3>Maximum Supply</h3>
+      <p>100,000,000 SVR</p>
+    </div>
+  </div>
+</section>
+
+<section class="container" id="roadmap">
+  <h2>Roadmap</h2>
+
+  <div class="cards">
+    <div class="card">
+      <h3>Phase 1</h3>
+      <p>Website Development</p>
+    </div>
+
+    <div class="card">
+      <h3>Phase 2</h3>
+      <p>Telegram Mini App</p>
+    </div>
+
+    <div class="card">
+      <h3>Phase 3</h3>
+      <p>TON Wallet Integration</p>
+    </div>
+
+    <div class="card">
+      <h3>Phase 4</h3>
+      <p>SVR Token Launch</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>© 2026 SevenRise (SVR)</p>
+  <p>Powered by TON Ecosystem</p>
+</footer>
+
+</body>
+  </html>
