@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SevenRise Super Admin</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 20px;
+    background: #080d19;
+    color: white;
+    font-family: Arial, sans-serif;
+}
+
+.container {
+    max-width: 1100px;
+    margin: auto;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 25px;
+}
+
+.logo {
+    color: #39e6bd;
+    font-size: 27px;
+    font-weight: bold;
+}
+
+.subtitle {
+    color: #91a1b9;
+    font-size: 13px;
+    margin-top: 5px;
+}
+
+.panel {
+    background: #111b2e;
+    border: 1px solid #263650;
+    border-radius: 14px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+h2 {
+    margin-top: 0;
+    font-size: 19px;
+}
+
+input {
+    width: 100%;
+    padding: 14px;
+    border-radius: 8px;
+    border: 1px solid #354761;
+    background: #091323;
+    color: white;
+    margin: 8px 0 15px;
+}
+
+button {
+    border: 0;
+    padding: 12px 17px;
+    border-radius: 8px;
+    background: #18c9a5;
+    color: #06131b;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+button.secondary {
+    background: #263650;
+    color: white;
+}
+
+button.danger {
+    background: #e34d68;
+    color: white;
+}
+
+button:disabled {
+    opacity: .5;
+    cursor: not-allowed;
+}
+
+.hidden {
+    display: none;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 14px;
+}
+
+.stat {
+    background: #101e32;
+    border: 1px solid #263650;
+    border-radius: 12px;
+    padding: 20px;
+}
+
+.stat-label {
+    color: #9aabc2;
+    font-size: 13px;
+}
+
+.stat-value {
+    color: #39e6bd;
+    font-size: 29px;
+    font-weight: bold;
+    margin-top: 12px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 650px;
+}
+
+th, td {
+    text-align: left;
+    padding: 13px;
+    border-bottom: 1px solid #263650;
+    font-size: 13px;
+}
+
+th {
+    color: #39e6bd;
+}
+
+.table-wrap {
+    overflow-x: auto;
+}
+
+.status {
+    padding: 12px;
+    border-radius: 8px;
+    background: #17263b;
+    color: #b8c8dd;
+    margin-top: 12px;
+    font-size: 13px;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+.notice {
+    color: #f4ca75;
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+footer {
+    text-align: center;
+    color: #71839d;
+    font-size: 12px;
+    margin: 30px 0;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<header>
+    <div>
+        <div class="logo">7R SEVENRISE</div>
+        <div class="subtitle">SUPER ADMIN CONTROL PANEL</div>
+    </div>
+
+    <button id="logoutBtn" class="danger hidden">
+        Logout
+    </button>
+</header>
+
+<!-- LOGIN -->
+
+<section id="loginPanel" class="panel">
+
+    <h2>Super Admin Login</h2>
+
+    <p class="subtitle">
+        Masuk menggunakan akun SevenRise yang sudah ditetapkan sebagai Super Admin.
+    </p>
+
+    <label>Email</label>
+    <input
+        type="email"
+        id="email"
+        placeholder="Email akun SevenRise"
+        autocomplete="username"
+    >
+
+    <label>Password</label>
+    <input
+        type="password"
+        id="password"
+        placeholder="Password"
+        autocomplete="current-password"
+    >
+
+    <button id="loginBtn" style="width:100%">
+        LOGIN SUPER ADMIN
+    </button>
+
+    <div id="loginStatus" class="status">
+        Silakan login.
+    </div>
+
+</section>
+
+<!-- DASHBOARD -->
+
+<section id="dashboard" class="hidden">
+
+    <div class="panel">
+        <h2>Dashboard Overview</h2>
+
+        <p class="subtitle">
+            Statistik ekosistem SevenRise.
+        </p>
+
+        <button id="refreshBtn">
+            REFRESH DATA
+        </button>
+    </div>
+
+    <div class="grid">
+
+        <div class="stat">
+            <div class="stat-label">TOTAL USERS</div>
+            <div class="stat-value" id="totalUsers">0</div>
+        </div>
+
+        <div class="stat">
+            <div class="stat-label">MINING SESSIONS</div>
+            <div class="stat-value" id="totalMining">0</div>
+        </div>
+
+        <div class="stat">
+            <div class="stat-label">REFERRALS</div>
+            <div class="stat-value" id="totalReferrals">0</div>
+        </div>
+
+        <div class="stat">
+            <div class="stat-label">DAILY CHECK-INS</div>
+            <div class="stat-value" id="totalCheckins">0</div>
+        </div>
+
+    </div>
+
+    <div class="panel" style="margin-top:20px">
+
+        <h2>Daftar Pengguna</h2>
+
+        <p class="subtitle">
+            Maksimal 50 pengguna dengan jumlah poin tertinggi.
+        </p>
+
+        <div class="table-wrap">
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>USER ID</th>
+                        <th>USERNAME</th>
+                        <th>POINTS</th>
+                        <th>TON WALLET</th>
+                    </tr>
+                </thead>
+
+                <tbody id="userTable">
+                    <tr>
+                        <td colspan="4">Belum ada data.</td>
+                    </tr>
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+    <div class="panel">
+        <h2>Keamanan</h2>
+
+        <p class="notice">
+            Dashboard ini hanya menampilkan data.
+            Wallet yang ditampilkan belum tentu terverifikasi.
+            Jangan menganggap poin internal sebagai token SVR
+            yang sudah diterbitkan di blockchain TON.
+        </p>
+    </div>
+
+</section>
+
+<div id="globalStatus" class="status hidden"></div>
+
+<footer>
+    SEVENRISE © 2026 — SUPER ADMIN PANEL
+</footer>
+
+</div>
+
+<script>
+const SUPABASE_URL =
+"https://eyhvzkqjnpuepqedvprl.supabase.co";
+
+const SUPABASE_KEY =
+"sb_publishable_8octlvT4wMspfEX14uFMuA_ShwqQYbj";
+
+const client = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+);
+
+const $ = id => document.getElementById(id);
+
+function showStatus(message, target = "globalStatus") {
+    const element = $(target);
+    element.textContent = message;
+    element.classList.remove("hidden");
+}
+
+function formatNumber(value) {
+    return Number(value || 0).toLocaleString("id-ID");
+}
+
+async function callAdmin(action) {
+    const { data, error } = await client.functions.invoke(
+        "sevenrise-admin",
+        {
+            body: { action }
+        }
+    );
+
+    if (error) {
+        let details = error.message;
+
+        try {
+            const context = error.context;
+            if (context && typeof context.json === "function") {
+                const body = await context.json();
+                details = body.error || body.details || details;
+            }
+        } catch (_) {}
+
+        throw new Error(details);
+    }
+
+    if (!data || data.success !== true) {
+        throw new Error(
+            data?.error || "Permintaan admin gagal."
+        );
+    }
+
+    return data;
+}
+
+async function loadOverview() {
+    const data = await callAdmin("overview");
+
+    $("totalUsers").textContent =
+        formatNumber(data.stats.total_users);
+
+    $("totalMining").textContent =
+        formatNumber(data.stats.mining_sessions);
+
+    $("totalReferrals").textContent =
+        formatNumber(data.stats.referrals);
+
+    $("totalCheckins").textContent =
+        formatNumber(data.stats.daily_checkins);
+}
+
+async function loadUsers() {
+    const data = await callAdmin("users");
+
+    const table = $("userTable");
+    table.innerHTML = "";
+
+    if (!data
