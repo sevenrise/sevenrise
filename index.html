@@ -411,6 +411,45 @@ db.auth.onAuthStateChange((event,session)=>{
 
 loadDashboard();
 </script>
+<section id="sevenrise-ton-wallet" style="
+  background:#151b2b;
+  color:white;
+  padding:20px;
+  margin:20px;
+  border-radius:16px;
+  text-align:center;
+">
+  <h2>TON WALLET</h2>
+  <p>Connect your TON wallet to SevenRise</p>
 
+  <div id="ton-connect"></div>
+
+  <p id="ton-wallet-status">Wallet belum terhubung</p>
+</section>
+
+<script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
+
+<script>
+window.addEventListener("load", function () {
+  const tonUI = new TON_CONNECT_UI.TonConnectUI({
+    manifestUrl:
+      "https://sevenrise.github.io/sevenrise/tonconnect-manifest.json",
+    buttonRootId: "ton-connect"
+  });
+
+  tonUI.onStatusChange(function(wallet) {
+    const status = document.getElementById("ton-wallet-status");
+
+    if (wallet) {
+      const address = wallet.account.address;
+      status.innerText =
+        "Connected: " + address.slice(0, 8) +
+        "..." + address.slice(-8);
+    } else {
+      status.innerText = "Wallet belum terhubung";
+    }
+  });
+});
+ </script>
 </body>
  </html>
