@@ -1,853 +1,1108 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#080d1c">
-  <title>SevenRise (SVR) — TON Ecosystem</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#080d1c">
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
+<title>SevenRise | SVR Ecosystem</title>
 
-  <style>
-    :root {
-      --bg:#080d1c;
-      --card:#111a30;
-      --card2:#172440;
-      --text:#f4f7ff;
-      --muted:#9eacc8;
-      --blue:#3985ff;
-      --cyan:#35e0d0;
-      --green:#36d98a;
-      --red:#ff657c;
-      --border:#273653;
-    }
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-    * { box-sizing:border-box; }
+<style>
+*{box-sizing:border-box}
 
-    body {
-      margin:0;
-      background:radial-gradient(circle at top,#172c51 0,#080d1c 48%);
-      color:var(--text);
-      font-family:Arial,sans-serif;
-      min-height:100vh;
-    }
+body{
+ margin:0;
+ background:#080d1c;
+ color:#fff;
+ font-family:Arial,sans-serif;
+}
 
-    .container {
-      width:min(100% - 28px,850px);
-      margin:auto;
-      padding:24px 0 45px;
-    }
+.container{
+ max-width:800px;
+ margin:auto;
+ padding:18px;
+}
 
-    header {
-      text-align:center;
-      padding:22px 0;
-    }
+header{
+ text-align:center;
+ padding:25px 0;
+}
 
-    .logo {
-      font-size:48px;
-      font-weight:900;
-      letter-spacing:3px;
-      color:var(--cyan);
-      text-shadow:0 0 25px #35e0d077;
-    }
+.logo{
+ font-size:58px;
+ font-weight:900;
+ color:#35e0d0;
+}
 
-    header p { color:var(--muted); margin-top:7px; }
+.card{
+ background:#111a30;
+ border:1px solid #273653;
+ border-radius:16px;
+ padding:20px;
+ margin:15px 0;
+}
 
-    .card {
-      background:linear-gradient(145deg,var(--card),#0d1629);
-      border:1px solid var(--border);
-      border-radius:18px;
-      padding:20px;
-      margin:15px 0;
-      box-shadow:0 12px 35px #0004;
-    }
+h2{font-size:19px}
 
-    h2 { font-size:19px; margin:0 0 15px; }
-    h3 { font-size:15px; margin:0 0 10px; }
+.small{
+ color:#9eacc8;
+ font-size:13px;
+ line-height:1.6;
+}
 
-    input {
-      display:block;
-      width:100%;
-      padding:14px;
-      margin:10px 0;
-      border-radius:10px;
-      border:1px solid var(--border);
-      background:#080f20;
-      color:white;
-      font-size:15px;
-      outline:none;
-    }
+input{
+ width:100%;
+ padding:14px;
+ margin:8px 0;
+ border-radius:9px;
+ border:1px solid #273653;
+ background:#080f20;
+ color:white;
+}
 
-    input:focus { border-color:var(--blue); }
+button{
+ width:100%;
+ padding:14px;
+ margin-top:9px;
+ border:0;
+ border-radius:9px;
+ background:#3985ff;
+ color:white;
+ font-weight:bold;
+ cursor:pointer;
+}
 
-    button {
-      border:0;
-      border-radius:10px;
-      padding:13px 17px;
-      background:linear-gradient(100deg,var(--blue),#665cff);
-      color:white;
-      font-weight:bold;
-      font-size:14px;
-      cursor:pointer;
-      width:100%;
-      margin-top:9px;
-    }
+button:disabled{
+ opacity:.5;
+ cursor:not-allowed;
+}
 
-    button:disabled { opacity:.5; cursor:not-allowed; }
+.green{background:#13a96c}
+.secondary{background:#263653}
 
-    button.secondary {
-      background:var(--card2);
-      border:1px solid var(--border);
-    }
+.hidden{display:none!important}
 
-    button.green {
-      background:linear-gradient(100deg,#13a96c,#28d89a);
-      color:#041b13;
-    }
+.points{
+ font-size:42px;
+ color:#35e0d0;
+ font-weight:bold;
+}
 
-    .small { color:var(--muted); font-size:13px; line-height:1.6; }
-    .message { margin-top:12px; font-size:13px; line-height:1.5; overflow-wrap:anywhere; }
-    .success { color:var(--green); }
-    .error { color:var(--red); }
+.stat{
+ background:#172440;
+ padding:14px;
+ border-radius:10px;
+ margin:8px 0;
+}
 
-    .hidden { display:none !important; }
+.grid{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:10px;
+}
 
-    .points {
-      font-size:42px;
-      font-weight:900;
-      color:var(--cyan);
-      margin:10px 0;
-    }
+.message{
+ font-size:13px;
+ margin-top:10px;
+ overflow-wrap:anywhere;
+}
 
-    .grid {
-      display:grid;
-      grid-template-columns:repeat(2,minmax(0,1fr));
-      gap:12px;
-    }
+.success{color:#36d98a}
+.error{color:#ff657c}
 
-    .stat {
-      padding:15px;
-      background:#172440;
-      border-radius:12px;
-    }
+.address{
+ word-break:break-all;
+ color:#35e0d0;
+ font-size:12px;
+}
 
-    .stat strong { display:block; font-size:22px; margin-top:7px; }
-
-    .wallet-address {
-      word-break:break-all;
-      color:var(--cyan);
-      font-size:12px;
-      line-height:1.6;
-    }
-
-    .divider {
-      height:1px;
-      background:var(--border);
-      margin:17px 0;
-    }
-
-    footer {
-      text-align:center;
-      color:var(--muted);
-      font-size:12px;
-      padding:25px 5px;
-      line-height:1.7;
-    }
-
-    @media(max-width:500px) {
-      .grid { grid-template-columns:1fr 1fr; }
-      .card { padding:16px; }
-    }
-  </style>
+footer{
+ text-align:center;
+ color:#9eacc8;
+ padding:25px;
+ font-size:12px;
+}
+</style>
 </head>
 
 <body>
+
 <div class="container">
 
-  <header>
-    <div class="logo">7R</div>
-    <h1>SEVENRISE</h1>
-    <p>SVR Ecosystem • Powered by TON</p>
-    <p>Community Mining Platform</p>
-  </header>
+<header>
+ <div class="logo">7R</div>
+ <h1>SEVENRISE</h1>
+ <p class="small">SVR Ecosystem • Powered by TON</p>
+</header>
 
-  <!-- AUTH -->
-  <section id="authSection" class="card">
-    <h2>Welcome to SevenRise</h2>
-    <p class="small">Daftar akun baru atau masuk ke akun SevenRise kamu.</p>
+<!-- LOGIN DAN REGISTER -->
 
-    <input id="username" type="text" placeholder="Username (untuk pendaftaran)">
-    <input id="email" type="email" placeholder="Email address" autocomplete="email">
-    <input id="password" type="password" placeholder="Password" autocomplete="current-password">
+<section id="authSection" class="card">
 
-    <button id="registerBtn" onclick="registerUser()">REGISTER</button>
-    <button id="loginBtn" class="secondary" onclick="loginUser()">LOGIN</button>
+ <h2>WELCOME TO SEVENRISE</h2>
 
-    <div id="authMessage" class="message"></div>
-  </section>
+ <p class="small">
+ Daftar akun baru atau masuk ke akun SevenRise.
+ </p>
 
-  <!-- DASHBOARD -->
-  <main id="dashboard" class="hidden">
+ <input id="username" placeholder="Username">
 
-    <section class="card">
-      <h2>YOUR TOTAL POINTS</h2>
-      <div class="points" id="totalPoints">0</div>
-      <p class="small">SVR Points • Belum merupakan token yang dapat diperdagangkan.</p>
-      <p class="small">Username: <strong id="profileUsername">-</strong></p>
-    </section>
+ <input
+  id="email"
+  type="email"
+  placeholder="Email"
+ >
 
-    <section class="card">
-      <h2>MINING CENTER</h2>
-      <div class="grid">
-        <div class="stat">
-          <span class="small">Mining Status</span>
-          <strong id="miningStatus">Belum dimulai</strong>
-        </div>
-        <div class="stat">
-          <span class="small">Reward</span>
-          <strong>+50 SVR</strong>
-        </div>
-      </div>
-      <p class="small" id="miningTimer">Mulai mining untuk mendapatkan reward.</p>
-      <button id="startMiningBtn" onclick="startMining()">START MINING</button>
-      <button id="claimMiningBtn" class="green" onclick="claimMining()">CLAIM REWARD +50</button>
-      <div id="miningMessage" class="message"></div>
-    </section>
+ <input
+  id="password"
+  type="password"
+  placeholder="Password"
+ >
 
-    <section class="card">
-      <h2>DAILY CHECK-IN</h2>
-      <div class="stat">
-        <span class="small">Daily reward</span>
-        <strong>+10 SVR</strong>
-      </div>
-      <button class="green" onclick="dailyCheckin()">CHECK-IN NOW</button>
-      <div id="checkinMessage" class="message"></div>
-    </section>
+ <button id="registerBtn" onclick="registerUser()">
+ REGISTER
+ </button>
 
-    <section class="card">
-      <h2>REFERRAL PROGRAM</h2>
-      <p class="small">Bagikan kode referral kamu kepada teman.</p>
-      <div class="stat">
-        <span class="small">Your referral code</span>
-        <strong id="referralCode">-</strong>
-      </div>
-      <button class="secondary" onclick="copyReferral()">COPY REFERRAL</button>
-      <div class="divider"></div>
-      <h3>Apply Referral Code</h3>
-      <input id="referralInput" placeholder="Masukkan kode referral teman">
-      <button onclick="applyReferral()">APPLY REFERRAL</button>
-      <div id="referralMessage" class="message"></div>
-    </section>
+ <button
+  id="loginBtn"
+  class="secondary"
+  onclick="loginUser()"
+ >
+ LOGIN
+ </button>
 
-    <section class="card">
-      <h2>TON WALLET</h2>
-      <p class="small">Hubungkan wallet TON milikmu.</p>
+ <div id="authMessage" class="message"></div>
 
-      <div id="ton-connect"></div>
+</section>
 
-      <div class="divider"></div>
-      <p class="small">Wallet yang tersimpan:</p>
-      <div id="walletAddress" class="wallet-address">Belum terhubung</div>
-      <p id="walletMessage" class="message"></p>
+<!-- DASHBOARD -->
 
-      <button class="secondary" onclick="disconnectWallet()">DISCONNECT WALLET</button>
-    </section>
+<main id="dashboard" class="hidden">
 
-    <section class="card">
-      <h2>ACCOUNT</h2>
-      <p class="small" id="accountEmail"></p>
-      <button class="secondary" onclick="logoutUser()">LOGOUT</button>
-    </section>
+ <!-- POINTS -->
 
-  </main>
+ <section class="card">
 
-  <footer>
-    SEVENRISE (SVR) © 2026<br>
-    Powered by TON Blockchain<br>
-    SVR points are internal platform points and are not a guarantee of token value.
-  </footer>
+  <h2>YOUR TOTAL POINTS</h2>
+
+  <div class="points" id="totalPoints">0</div>
+
+  <p class="small">
+   SVR Points. Poin internal bukan token yang dapat diperdagangkan.
+  </p>
+
+  <p>
+   Username: <b id="profileUsername">-</b>
+  </p>
+
+ </section>
+
+ <!-- MINING -->
+
+ <section class="card">
+
+  <h2>MINING CENTER</h2>
+
+  <div class="grid">
+
+   <div class="stat">
+    <span class="small">Mining Status</span>
+    <h3 id="miningStatus">Belum dimulai</h3>
+   </div>
+
+   <div class="stat">
+    <span class="small">Reward</span>
+    <h3>+50 SVR</h3>
+   </div>
+
+  </div>
+
+  <p id="miningTimer" class="small"></p>
+
+  <button
+   id="startMiningBtn"
+   onclick="startMining()"
+  >
+   START MINING
+  </button>
+
+  <button
+   id="claimMiningBtn"
+   class="green"
+   onclick="claimMining()"
+  >
+   CLAIM +50
+  </button>
+
+  <div id="miningMessage" class="message"></div>
+
+ </section>
+
+ <!-- DAILY CHECKIN -->
+
+ <section class="card">
+
+  <h2>DAILY CHECK-IN</h2>
+
+  <p class="small">
+   Dapatkan reward harian +10 poin.
+  </p>
+
+  <button
+   class="green"
+   id="checkinBtn"
+   onclick="dailyCheckin()"
+  >
+   CHECK-IN NOW
+  </button>
+
+  <div id="checkinMessage" class="message"></div>
+
+ </section>
+
+ <!-- REFERRAL -->
+
+ <section class="card">
+
+  <h2>REFERRAL PROGRAM</h2>
+
+  <div class="stat">
+
+   <p class="small">Referral Code</p>
+
+   <h3 id="referralCode">-</h3>
+
+  </div>
+
+  <button
+   class="secondary"
+   onclick="copyReferral()"
+  >
+   COPY REFERRAL CODE
+  </button>
+
+  <input
+   id="referralInput"
+   placeholder="Masukkan kode referral"
+  >
+
+  <button onclick="applyReferral()">
+   APPLY REFERRAL
+  </button>
+
+  <div id="referralMessage" class="message"></div>
+
+ </section>
+
+ <!-- TON WALLET -->
+
+ <section class="card">
+
+  <h2>TON WALLET</h2>
+
+  <p class="small">
+   Masukkan alamat TON Wallet untuk menyimpan
+   alamat penerima reward SevenRise.
+  </p>
+
+  <input
+   id="tonWalletInput"
+   type="text"
+   placeholder="Masukkan alamat TON Wallet"
+   autocomplete="off"
+  >
+
+  <button
+   id="saveWalletBtn"
+   onclick="saveTONWallet()"
+  >
+   SIMPAN ALAMAT WALLET
+  </button>
+
+  <div class="stat">
+
+   <p class="small">Alamat Wallet</p>
+
+   <div id="walletAddress" class="address">
+    Belum diisi
+   </div>
+
+   <p class="small">Status</p>
+
+   <h3 id="walletStatus">
+    Belum terdaftar
+   </h3>
+
+  </div>
+
+  <div id="walletMessage" class="message"></div>
+
+ </section>
+
+ <!-- ACCOUNT -->
+
+ <section class="card">
+
+  <h2>ACCOUNT</h2>
+
+  <p id="accountEmail" class="small"></p>
+
+  <button
+   class="secondary"
+   onclick="logoutUser()"
+  >
+   LOGOUT
+  </button>
+
+ </section>
+
+</main>
+
+<footer>
+ SEVENRISE SVR © 2026<br>
+ Powered by TON Blockchain
+</footer>
 
 </div>
 
 <script>
 "use strict";
 
-/* ==================================
-   SEVENRISE CONFIGURATION
-================================== */
+/* =========================
+   SUPABASE CONFIGURATION
+========================= */
 
-const SUPABASE_URL = "https://eyhvzkqjnpuepqedvprl.supabase.co";
+const SUPABASE_URL =
+"https://eyhvzkqjnpuepqedvprl.supabase.co";
 
 const SUPABASE_KEY =
 "sb_publishable_8octlvT4wMspfEX14uFMuA_ShwqQYbj";
 
-const TON_MANIFEST =
-"https://sevenrise.github.io/sevenrise/tonconnect-manifest.json";
-
-const supabaseClient = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_KEY,
-  {
-    auth: {
-      persistSession: true,
-      autoRefreshToken: true,
-      detectSessionInUrl: true
-    }
-  }
+const supabase = window.supabase.createClient(
+ SUPABASE_URL,
+ SUPABASE_KEY
 );
 
 let currentUser = null;
-let tonConnectUI = null;
-let activeWallet = null;
-let miningInterval = null;
 let miningSession = null;
+let miningInterval = null;
 
 
-/* ==================================
-   HELPERS
-================================== */
+/* =========================
+   HELPER
+========================= */
 
-function byId(id) {
-  return document.getElementById(id);
+function el(id){
+ return document.getElementById(id);
 }
 
-function showMessage(id, message, type = "") {
-  const element = byId(id);
-  element.textContent = message;
-  element.className = "message " + type;
+function message(id,text,type=""){
+ el(id).textContent=text;
+ el(id).className="message "+type;
 }
 
-function setBusy(buttonId, busy, text) {
-  const button = byId(buttonId);
-  if (!button) return;
-
-  if (busy) {
-    button.dataset.originalText = button.textContent;
-    button.disabled = true;
-    button.textContent = text || "Memproses...";
-  } else {
-    button.disabled = false;
-    button.textContent = button.dataset.originalText || text || "Kirim";
-  }
+function errorText(error){
+ return error?.message || String(error);
 }
 
-function friendlyError(error) {
-  if (!error) return "Terjadi kesalahan. Silakan coba lagi.";
+function busy(id,state,text){
+ const button=el(id);
 
-  const message = error.message || String(error);
+ if(!button)return;
 
-  if (message.includes("Invalid login credentials")) {
-    return "Email atau password salah.";
-  }
-
-  if (message.includes("Email not confirmed")) {
-    return "Silakan konfirmasi email terlebih dahulu.";
-  }
-
-  if (message.includes("User already registered")) {
-    return "Email ini sudah terdaftar. Silakan LOGIN.";
-  }
-
-  if (message.includes("Failed to fetch")) {
-    return "Koneksi gagal. Periksa internet dan konfigurasi Supabase.";
-  }
-
-  return message;
+ if(state){
+  button.dataset.old=button.textContent;
+  button.disabled=true;
+  button.textContent=text;
+ }else{
+  button.disabled=false;
+  button.textContent=button.dataset.old || "Kirim";
+ }
 }
 
 
-/* ==================================
+/* =========================
    REGISTER
-================================== */
+========================= */
 
-async function registerUser() {
-  const username = byId("username").value.trim();
-  const email = byId("email").value.trim();
-  const password = byId("password").value;
+async function registerUser(){
 
-  if (!username || !email || !password) {
-    showMessage("authMessage", "Isi username, email, dan password.", "error");
-    return;
+ const username=el("username").value.trim();
+ const email=el("email").value.trim();
+ const password=el("password").value;
+
+ if(!username || !email || !password){
+  message(
+   "authMessage",
+   "Lengkapi semua data.",
+   "error"
+  );
+  return;
+ }
+
+ if(password.length<6){
+  message(
+   "authMessage",
+   "Password minimal 6 karakter.",
+   "error"
+  );
+  return;
+ }
+
+ busy("registerBtn",true,"Mendaftarkan...");
+
+ try{
+
+  const {data,error}=await supabase.auth.signUp({
+   email,
+   password,
+   options:{
+    data:{username}
+   }
+  });
+
+  if(error)throw error;
+
+  if(data.session){
+   await handleLogin(data.user);
+  }else{
+   message(
+    "authMessage",
+    "Pendaftaran berhasil. Periksa email untuk konfirmasi akun.",
+    "success"
+   );
   }
 
-  if (password.length < 6) {
-    showMessage("authMessage", "Password minimal 6 karakter.", "error");
-    return;
-  }
+ }catch(e){
 
-  setBusy("registerBtn", true, "Mendaftarkan...");
+  message("authMessage",errorText(e),"error");
 
-  try {
-    const { data, error } = await supabaseClient.auth.signUp({
-      email,
-      password,
-      options: {
-        data: { username }
-      }
-    });
+ }finally{
 
-    if (error) throw error;
+  busy("registerBtn",false);
 
-    if (data.session) {
-      await handleLogin(data.session.user);
-      showMessage("authMessage", "Pendaftaran berhasil.", "success");
-    } else {
-      showMessage(
-        "authMessage",
-        "Pendaftaran berhasil. Periksa email untuk konfirmasi, lalu LOGIN.",
-        "success"
-      );
-    }
+ }
 
-  } catch (error) {
-    showMessage("authMessage", friendlyError(error), "error");
-  } finally {
-    setBusy("registerBtn", false);
-  }
 }
 
 
-/* ==================================
+/* =========================
    LOGIN
-================================== */
+========================= */
 
-async function loginUser() {
-  const email = byId("email").value.trim();
-  const password = byId("password").value;
+async function loginUser(){
 
-  if (!email || !password) {
-    showMessage("authMessage", "Masukkan email dan password.", "error");
-    return;
-  }
+ const email=el("email").value.trim();
+ const password=el("password").value;
 
-  setBusy("loginBtn", true, "Login...");
+ if(!email || !password){
+  message(
+   "authMessage",
+   "Masukkan email dan password.",
+   "error"
+  );
+  return;
+ }
 
-  try {
-    const { data, error } = await supabaseClient.auth.signInWithPassword({
-      email,
-      password
-    });
+ busy("loginBtn",true,"Login...");
 
-    if (error) throw error;
+ try{
 
-    await handleLogin(data.user);
+  const {data,error}=await supabase.auth.signInWithPassword({
+   email,
+   password
+  });
 
-  } catch (error) {
-    showMessage("authMessage", friendlyError(error), "error");
-  } finally {
-    setBusy("loginBtn", false);
-  }
+  if(error)throw error;
+
+  await handleLogin(data.user);
+
+ }catch(e){
+
+  message("authMessage",errorText(e),"error");
+
+ }finally{
+
+  busy("loginBtn",false);
+
+ }
+
 }
 
 
-/* ==================================
+/* =========================
    AUTH SESSION
-================================== */
+========================= */
 
-async function handleLogin(user) {
-  currentUser = user;
+async function handleLogin(user){
 
-  byId("authSection").classList.add("hidden");
-  byId("dashboard").classList.remove("hidden");
+ currentUser=user;
 
-  byId("accountEmail").textContent = user.email || "";
+ el("authSection").classList.add("hidden");
+ el("dashboard").classList.remove("hidden");
+
+ el("accountEmail").textContent=user.email || "";
+
+ await loadDashboard();
+
+}
+
+supabase.auth.onAuthStateChange((event,session)=>{
+
+ if(event==="SIGNED_OUT"){
+
+  currentUser=null;
+
+  el("dashboard").classList.add("hidden");
+  el("authSection").classList.remove("hidden");
+
+ }
+
+});
+
+
+/* =========================
+   LOAD DASHBOARD
+========================= */
+
+async function loadDashboard(){
+
+ if(!currentUser)return;
+
+ try{
+
+  const {data,error}=await supabase
+   .from("profiles")
+   .select(
+    "username,points,referral_code,wallet_address"
+   )
+   .eq("id",currentUser.id)
+   .single();
+
+  if(error)throw error;
+
+  el("totalPoints").textContent=
+   Number(data.points||0).toLocaleString("id-ID");
+
+  el("profileUsername").textContent=
+   data.username||"-";
+
+  el("referralCode").textContent=
+   data.referral_code||"-";
+
+  if(data.wallet_address){
+
+   el("walletAddress").textContent=
+    data.wallet_address;
+
+   el("walletStatus").textContent=
+    "TERSIMPAN — BELUM TERVERIFIKASI";
+
+  }else{
+
+   el("walletAddress").textContent="Belum diisi";
+
+   el("walletStatus").textContent=
+    "Belum terdaftar";
+
+  }
+
+  await loadMiningStatus();
+
+ }catch(e){
+
+  console.error(e);
+
+ }
+
+}
+
+
+/* =========================
+   MINING STATUS
+========================= */
+
+async function loadMiningStatus(){
+
+ if(!currentUser)return;
+
+ const {data,error}=await supabase
+  .from("mining_sessions")
+  .select("*")
+  .eq("user_id",currentUser.id)
+  .is("claimed_at",null)
+  .order("started_at",{ascending:false})
+  .limit(1);
+
+ if(error){
+
+  console.error(error);
+  return;
+
+ }
+
+ miningSession=data?.[0]||null;
+
+ if(miningSession){
+
+  el("miningStatus").textContent="Aktif";
+
+  el("startMiningBtn").disabled=true;
+
+  el("claimMiningBtn").disabled=false;
+
+  runMiningTimer();
+
+ }else{
+
+  el("miningStatus").textContent="Belum dimulai";
+
+  el("miningTimer").textContent=
+   "Mulai mining sekarang.";
+
+  el("startMiningBtn").disabled=false;
+
+  el("claimMiningBtn").disabled=true;
+
+  if(miningInterval){
+   clearInterval(miningInterval);
+  }
+
+ }
+
+}
+
+
+/* =========================
+   MINING TIMER
+========================= */
+
+function runMiningTimer(){
+
+ if(miningInterval){
+  clearInterval(miningInterval);
+ }
+
+ function update(){
+
+  if(!miningSession)return;
+
+  const remaining=
+   new Date(miningSession.ends_at).getTime()
+   -Date.now();
+
+  if(remaining<=0){
+
+   el("miningStatus").textContent="Selesai";
+
+   el("miningTimer").textContent=
+    "Silakan klaim reward.";
+
+   el("claimMiningBtn").disabled=false;
+
+   clearInterval(miningInterval);
+
+   return;
+
+  }
+
+  const h=Math.floor(remaining/3600000);
+  const m=Math.floor((remaining%3600000)/60000);
+  const s=Math.floor((remaining%60000)/1000);
+
+  el("miningTimer").textContent=
+   `Sisa waktu ${h} jam ${m} menit ${s} detik`;
+
+ }
+
+ update();
+
+ miningInterval=setInterval(update,1000);
+
+}
+
+
+/* =========================
+   START MINING
+========================= */
+
+async function startMining(){
+
+ if(!currentUser)return;
+
+ busy("startMiningBtn",true,"Memulai...");
+
+ try{
+
+  const {error}=await supabase.rpc("start_mining");
+
+  if(error)throw error;
+
+  message(
+   "miningMessage",
+   "Mining berhasil dimulai!",
+   "success"
+  );
+
+ }catch(e){
+
+  message(
+   "miningMessage",
+   errorText(e),
+   "error"
+  );
+
+ }finally{
+
+  busy("startMiningBtn",false);
+
+  await loadMiningStatus();
+
+ }
+
+}
+
+
+/* =========================
+   CLAIM MINING
+========================= */
+
+async function claimMining(){
+
+ if(!currentUser)return;
+
+ busy("claimMiningBtn",true,"Mengklaim...");
+
+ try{
+
+  const {error}=await supabase.rpc("claim_mining");
+
+  if(error)throw error;
+
+  message(
+   "miningMessage",
+   "Reward berhasil diklaim!",
+   "success"
+  );
 
   await loadDashboard();
-}
 
-supabaseClient.auth.onAuthStateChange((event, session) => {
-  if (event === "SIGNED_OUT") {
-    currentUser = null;
-    byId("dashboard").classList.add("hidden");
-    byId("authSection").classList.remove("hidden");
-    return;
-  }
+ }catch(e){
 
-  if (session && session.user) {
-    currentUser = session.user;
+  message(
+   "miningMessage",
+   errorText(e),
+   "error"
+  );
 
-    setTimeout(() => {
-      handleLogin(session.user).catch(error => {
-        console.error("Dashboard error:", error);
-        showMessage("authMessage", friendlyError(error), "error");
-      });
-    }, 0);
-  }
-});
+ }finally{
 
+  busy("claimMiningBtn",false);
 
-/* ==================================
-   LOAD DASHBOARD
-================================== */
+  await loadMiningStatus();
 
-async function loadDashboard() {
-  if (!currentUser) return;
+ }
 
-  try {
-    const { data, error } = await supabaseClient
-      .from("profiles")
-      .select("username,points,referral_code,wallet_address,wallet_network")
-      .eq("id", currentUser.id)
-      .single();
-
-    if (error) throw error;
-
-    byId("totalPoints").textContent = Number(data.points || 0).toLocaleString("en-US");
-    byId("profileUsername").textContent = data.username || "-";
-    byId("referralCode").textContent = data.referral_code || "-";
-
-    if (data.wallet_address) {
-      byId("walletAddress").textContent = data.wallet_address;
-    } else if (!activeWallet) {
-      byId("walletAddress").textContent = "Belum terhubung";
-    }
-
-    await loadMiningStatus();
-
-  } catch (error) {
-    console.error("Profile error:", error);
-    showMessage(
-      "miningMessage",
-      "Gagal membaca profil: " + friendlyError(error),
-      "error"
-    );
-  }
 }
 
 
-/* ==================================
-   MINING STATUS
-================================== */
-
-async function loadMiningStatus() {
-  if (!currentUser) return;
-
-  const { data, error } = await supabaseClient
-    .from("mining_sessions")
-    .select("*")
-    .eq("user_id", currentUser.id)
-    .is("claimed_at", null)
-    .order("started_at", { ascending: false })
-    .limit(1);
-
-  if (error) {
-    console.error("Mining status:", error);
-    return;
-  }
-
-  miningSession = data && data.length ? data[0] : null;
-
-  if (miningSession) {
-    byId("miningStatus").textContent = "Aktif";
-    byId("startMiningBtn").disabled = true;
-    byId("claimMiningBtn").disabled = false;
-    runMiningTimer();
-  } else {
-    byId("miningStatus").textContent = "Belum dimulai";
-    byId("miningTimer").textContent = "Mulai mining untuk mendapatkan reward.";
-    byId("startMiningBtn").disabled = false;
-    byId("claimMiningBtn").disabled = true;
-
-    if (miningInterval) clearInterval(miningInterval);
-  }
-}
-
-function runMiningTimer() {
-  if (miningInterval) clearInterval(miningInterval);
-
-  function update() {
-    if (!miningSession) return;
-
-    const end = new Date(miningSession.ends_at).getTime();
-    const remaining = end - Date.now();
-
-    if (remaining <= 0) {
-      byId("miningStatus").textContent = "Selesai";
-      byId("miningTimer").textContent = "Mining selesai. Silakan CLAIM REWARD.";
-      byId("claimMiningBtn").disabled = false;
-      clearInterval(miningInterval);
-      return;
-    }
-
-    const hours = Math.floor(remaining / 3600000);
-    const minutes = Math.floor((remaining % 3600000) / 60000);
-    const seconds = Math.floor((remaining % 60000) / 1000);
-
-    byId("miningTimer").textContent =
-      `Sisa waktu: ${hours} jam ${minutes} menit ${seconds} detik`;
-  }
-
-  update();
-  miningInterval = setInterval(update, 1000);
-}
-
-
-/* ==================================
-   START MINING
-================================== */
-
-async function startMining() {
-  if (!currentUser) return;
-
-  setBusy("startMiningBtn", true, "Memulai...");
-
-  try {
-    const { error } = await supabaseClient.rpc("start_mining");
-
-    if (error) throw error;
-
-    showMessage("miningMessage", "Mining berhasil dimulai!", "success");
-    await loadMiningStatus();
-
-  } catch (error) {
-    showMessage("miningMessage", friendlyError(error), "error");
-  } finally {
-    setBusy("startMiningBtn", false);
-    await loadMiningStatus();
-  }
-}
-
-
-/* ==================================
-   CLAIM MINING
-================================== */
-
-async function claimMining() {
-  if (!currentUser) return;
-
-  setBusy("claimMiningBtn", true, "Mengklaim...");
-
-  try {
-    const { error } = await supabaseClient.rpc("claim_mining");
-
-    if (error) throw error;
-
-    showMessage("miningMessage", "Reward +50 berhasil diklaim!", "success");
-
-    await loadDashboard();
-
-  } catch (error) {
-    showMessage("miningMessage", friendlyError(error), "error");
-  } finally {
-    setBusy("claimMiningBtn", false);
-    await loadMiningStatus();
-  }
-}
-
-
-/* ==================================
+/* =========================
    DAILY CHECK-IN
-================================== */
+========================= */
 
-async function dailyCheckin() {
-  if (!currentUser) return;
+async function dailyCheckin(){
 
-  try {
-    const { error } = await supabaseClient.rpc("daily_checkin");
+ if(!currentUser)return;
 
-    if (error) throw error;
+ busy("checkinBtn",true,"Memproses...");
 
-    showMessage("checkinMessage", "Berhasil! Kamu mendapatkan +10 SVR.", "success");
-    await loadDashboard();
+ try{
 
-  } catch (error) {
-    showMessage("checkinMessage", friendlyError(error), "error");
-  }
+  const {error}=await supabase.rpc("daily_checkin");
+
+  if(error)throw error;
+
+  message(
+   "checkinMessage",
+   "Berhasil mendapatkan +10 poin!",
+   "success"
+  );
+
+  await loadDashboard();
+
+ }catch(e){
+
+  message(
+   "checkinMessage",
+   errorText(e),
+   "error"
+  );
+
+ }finally{
+
+  busy("checkinBtn",false);
+
+ }
+
 }
 
 
-/* ==================================
-   REFERRAL
-================================== */
+/* =========================
+   REFERRAL COPY
+========================= */
 
-async function copyReferral() {
-  const code = byId("referralCode").textContent;
+async function copyReferral(){
 
-  if (!code || code === "-") {
-    showMessage("referralMessage", "Kode referral belum tersedia.", "error");
-    return;
-  }
+ const code=el("referralCode").textContent;
 
-  try {
-    await navigator.clipboard.writeText(code);
-    showMessage("referralMessage", "Kode referral berhasil disalin!", "success");
-  } catch {
-    showMessage("referralMessage", "Gagal menyalin kode. Salin secara manual.", "error");
-  }
-}
+ if(!code || code==="-"){
 
-async function applyReferral() {
-  if (!currentUser) return;
+  message(
+   "referralMessage",
+   "Kode referral belum tersedia.",
+   "error"
+  );
 
-  const code = byId("referralInput").value.trim();
+  return;
 
-  if (!code) {
-    showMessage("referralMessage", "Masukkan kode referral.", "error");
-    return;
-  }
+ }
 
-  try {
-    const { error } = await supabaseClient.rpc("apply_referral", {
-      code: code
-    });
+ try{
 
-    if (error) throw error;
+  await navigator.clipboard.writeText(code);
 
-    showMessage("referralMessage", "Referral berhasil diterapkan!", "success");
-    byId("referralInput").value = "";
+  message(
+   "referralMessage",
+   "Kode referral berhasil disalin!",
+   "success"
+  );
 
-    await loadDashboard();
+ }catch(e){
 
-  } catch (error) {
-    showMessage("referralMessage", friendlyError(error), "error");
-  }
+  message(
+   "referralMessage",
+   "Silakan salin kode secara manual.",
+   "error"
+  );
+
+ }
+
 }
 
 
-/* ==================================
-   TON CONNECT
-================================== */
+/* =========================
+   APPLY REFERRAL
+========================= */
 
-async function initTONConnect() {
-  if (!window.TON_CONNECT_UI) {
-    showMessage(
-      "walletMessage",
-      "TON Connect gagal dimuat. Periksa koneksi internet.",
-      "error"
-    );
-    return;
-  }
+async function applyReferral(){
 
-  try {
-    tonConnectUI = new TON_CONNECT_UI.TonConnectUI({
-      manifestUrl: TON_MANIFEST,
-      buttonRootId: "ton-connect"
-    });
+ if(!currentUser)return;
 
-    tonConnectUI.onStatusChange(async wallet => {
-      activeWallet = wallet || null;
+ const code=el("referralInput").value.trim();
 
-      if (wallet && wallet.account) {
-        const address = wallet.account.address;
+ if(!code){
 
-        byId("walletAddress").textContent = address;
+  message(
+   "referralMessage",
+   "Masukkan kode referral.",
+   "error"
+  );
 
-        if (currentUser) {
-          await saveWallet(address);
-        } else {
-          showMessage(
-            "walletMessage",
-            "Wallet terhubung. Login untuk menyimpan alamat ke akun.",
-            ""
-          );
-        }
+  return;
 
-      } else {
-        byId("walletAddress").textContent = "Belum terhubung";
+ }
 
-        if (currentUser) {
-          await saveWallet(null);
-        }
-      }
-    });
+ try{
 
-  } catch (error) {
-    console.error("TON Connect error:", error);
-    showMessage("walletMessage", friendlyError(error), "error");
-  }
+  const {error}=await supabase.rpc(
+   "apply_referral",
+   {code}
+  );
+
+  if(error)throw error;
+
+  message(
+   "referralMessage",
+   "Referral berhasil diterapkan!",
+   "success"
+  );
+
+  el("referralInput").value="";
+
+  await loadDashboard();
+
+ }catch(e){
+
+  message(
+   "referralMessage",
+   errorText(e),
+   "error"
+  );
+
+ }
+
 }
 
 
-/* ==================================
-   SAVE WALLET TO SUPABASE
-================================== */
+/* =========================
+   SAVE TON WALLET
+========================= */
 
-async function saveWallet(address) {
-  if (!currentUser) return;
+async function saveTONWallet(){
 
-  try {
-    const { error } = await supabaseClient.rpc("save_wallet_address", {
-      p_wallet_address: address
-    });
+ if(!currentUser){
 
-    if (error) throw error;
+  message(
+   "walletMessage",
+   "Silakan login terlebih dahulu.",
+   "error"
+  );
 
-    showMessage(
-      "walletMessage",
-      address ? "Alamat wallet berhasil disimpan." : "Wallet dilepaskan dari akun.",
-      "success"
-    );
+  return;
 
-  } catch (error) {
-    console.error("Save wallet:", error);
-    showMessage("walletMessage", friendlyError(error), "error");
-  }
+ }
+
+ const address=el("tonWalletInput").value.trim();
+
+ if(!address){
+
+  message(
+   "walletMessage",
+   "Masukkan alamat TON Wallet.",
+   "error"
+  );
+
+  return;
+
+ }
+
+ if(address.length<40 || address.length>70){
+
+  message(
+   "walletMessage",
+   "Panjang alamat wallet tidak sesuai.",
+   "error"
+  );
+
+  return;
+
+ }
+
+ busy("saveWalletBtn",true,"Menyimpan...");
+
+ try{
+
+  const {error}=await supabase.rpc(
+   "save_wallet_address",
+   {
+    p_wallet_address:address
+   }
+  );
+
+  if(error)throw error;
+
+  el("walletAddress").textContent=address;
+
+  el("walletStatus").textContent=
+   "TERSIMPAN — BELUM TERVERIFIKASI";
+
+  el("tonWalletInput").value="";
+
+  message(
+   "walletMessage",
+   "Alamat TON Wallet berhasil disimpan!",
+   "success"
+  );
+
+  await loadDashboard();
+
+ }catch(e){
+
+  message(
+   "walletMessage",
+   errorText(e),
+   "error"
+  );
+
+ }finally{
+
+  busy("saveWalletBtn",false);
+
+ }
+
 }
 
 
-/* ==================================
-   DISCONNECT WALLET
-================================== */
-
-async function disconnectWallet() {
-  if (!tonConnectUI) {
-    showMessage("walletMessage", "TON Connect belum siap.", "error");
-    return;
-  }
-
-  try {
-    await tonConnectUI.disconnect();
-  } catch (error) {
-    showMessage("walletMessage", friendlyError(error), "error");
-  }
-}
-
-
-/* ==================================
+/* =========================
    LOGOUT
-================================== */
+========================= */
 
-async function logoutUser() {
-  try {
-    const { error } = await supabaseClient.auth.signOut();
-    if (error) throw error;
+async function logoutUser(){
 
-    currentUser = null;
-    miningSession = null;
+ try{
 
-    if (miningInterval) clearInterval(miningInterval);
+  const {error}=await supabase.auth.signOut();
 
-    byId("dashboard").classList.add("hidden");
-    byId("authSection").classList.remove("hidden");
+  if(error)throw error;
 
-    showMessage("authMessage", "Kamu berhasil logout.", "success");
+  currentUser=null;
 
-  } catch (error) {
-    alert(friendlyError(error));
+  miningSession=null;
+
+  if(miningInterval){
+   clearInterval(miningInterval);
   }
+
+  el("dashboard").classList.add("hidden");
+
+  el("authSection").classList.remove("hidden");
+
+  message(
+   "authMessage",
+   "Logout berhasil.",
+   "success"
+  );
+
+ }catch(e){
+
+  alert(errorText(e));
+
+ }
+
 }
 
 
-/* ==================================
-   START APPLICATION
-================================== */
+/* =========================
+   INITIALIZATION
+========================= */
 
-window.addEventListener("load", async () => {
-  await initTONConnect();
+window.addEventListener("load",async()=>{
 
-  const { data, error } = await supabaseClient.auth.getSession();
+ const {data,error}=await supabase.auth.getSession();
 
-  if (error) {
-    showMessage("authMessage", friendlyError(error), "error");
-    return;
-  }
+ if(error){
 
-  if (data.session && data.session.user) {
-    await handleLogin(data.session.user);
-  }
+  message(
+   "authMessage",
+   errorText(error),
+   "error"
+  );
+
+  return;
+
+ }
+
+ if(data.session?.user){
+
+  await handleLogin(data.session.user);
+
+ }
+
 });
+
 </script>
 
 </body>
- </html>
+  </html>
