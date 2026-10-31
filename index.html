@@ -3,161 +3,373 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>SevenRise - SVR Ecosystem</title>
 
+<meta name="theme-color" content="#080e1c">
+<meta name="description" content="SevenRise SVR Community Ecosystem">
+
+<!-- SUPABASE -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
+<!-- TON CONNECT -->
+<script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
+
 <style>
-*{box-sizing:border-box}
-body{
- margin:0;
- background:#080e1c;
- color:white;
- font-family:Arial,sans-serif;
+* {
+  box-sizing: border-box;
 }
-.container{
- max-width:500px;
- margin:auto;
- padding:20px;
+
+body {
+  margin: 0;
+  background: #080e1c;
+  color: white;
+  font-family: Arial, sans-serif;
 }
-.header{
- text-align:center;
- padding:25px;
- background:linear-gradient(135deg,#172d58,#10182c);
- border-radius:20px;
- border:1px solid #294d87;
+
+.container {
+  max-width: 500px;
+  margin: auto;
+  padding: 18px;
 }
-.logo{
- font-size:38px;
- font-weight:bold;
- color:#42d9ff;
+
+.header {
+  text-align: center;
+  padding: 25px;
+  background: linear-gradient(135deg,#172d58,#10182c);
+  border-radius: 20px;
+  border: 1px solid #294d87;
 }
-.card{
- background:#121d32;
- border:1px solid #263c60;
- padding:18px;
- border-radius:16px;
- margin-top:15px;
+
+.logo {
+  font-size: 42px;
+  font-weight: bold;
+  color: #42d9ff;
 }
-h2,h3{margin-top:5px}
-input{
- width:100%;
- padding:13px;
- margin:7px 0;
- border:1px solid #344c70;
- border-radius:9px;
- background:#091426;
- color:white;
+
+.card {
+  background: #121d32;
+  border: 1px solid #263c60;
+  padding: 18px;
+  border-radius: 16px;
+  margin-top: 15px;
 }
-button{
- width:100%;
- padding:13px;
- margin-top:9px;
- border:0;
- border-radius:10px;
- background:#16b9ed;
- color:#061321;
- font-weight:bold;
- cursor:pointer;
+
+h2,h3 {
+  margin-top: 5px;
 }
-button.secondary{background:#263c60;color:white}
-button:disabled{opacity:.5}
-.points{
- font-size:35px;
- font-weight:bold;
- color:#45d9ff;
+
+input {
+  width: 100%;
+  padding: 13px;
+  margin: 7px 0;
+  border: 1px solid #344c70;
+  border-radius: 9px;
+  background: #091426;
+  color: white;
 }
-.status{
- color:#8fe7ff;
- font-size:14px;
+
+button {
+  width: 100%;
+  padding: 13px;
+  margin-top: 9px;
+  border: 0;
+  border-radius: 10px;
+  background: #16b9ed;
+  color: #061321;
+  font-weight: bold;
+  cursor: pointer;
 }
-.small{
- color:#9baecb;
- font-size:12px;
+
+button.secondary {
+  background: #263c60;
+  color: white;
 }
-#message{
- padding:12px;
- color:#61e6ff;
- overflow-wrap:anywhere;
+
+button:disabled {
+  opacity: .5;
+  cursor: not-allowed;
 }
-.hidden{display:none}
+
+.points {
+  font-size: 35px;
+  font-weight: bold;
+  color: #45d9ff;
+}
+
+.status {
+  color: #8fe7ff;
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+
+.small {
+  color: #9baecb;
+  font-size: 12px;
+}
+
+#message {
+  padding: 12px;
+  color: #61e6ff;
+  overflow-wrap: anywhere;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.wallet-box {
+  background: #091426;
+  border: 1px solid #344c70;
+  padding: 12px;
+  border-radius: 10px;
+  margin-top: 12px;
+  overflow-wrap: anywhere;
+}
+
+.footer {
+  text-align: center;
+  color: #7185a5;
+  font-size: 11px;
+  padding: 25px 10px;
+}
 </style>
 </head>
 
 <body>
+
 <div class="container">
 
-<div class="header">
- <div class="logo">7R</div>
- <h2>SEVENRISE</h2>
- <p>SVR Ecosystem • Powered by TON</p>
- <span class="small">Community Mining Platform</span>
-</div>
+  <!-- HEADER -->
 
-<div class="card" id="authCard">
- <h2>Welcome to SevenRise</h2>
- <p class="small">Register or login to your account</p>
+  <div class="header">
+    <div class="logo">7R</div>
+    <h2>SEVENRISE</h2>
+    <p>SVR Ecosystem • Powered by TON</p>
+    <span class="small">Community Mining Platform</span>
+  </div>
 
- <input id="username" placeholder="Username">
- <input id="email" type="email" placeholder="Email address">
- <input id="password" type="password" placeholder="Password">
+  <!-- AUTHENTICATION -->
 
- <button onclick="registerSVR()">REGISTER</button>
- <button class="secondary" onclick="loginSVR()">LOGIN</button>
-</div>
+  <div class="card" id="authCard">
 
-<div id="dashboard" class="hidden">
+    <h2>Welcome to SevenRise</h2>
+    <p class="small">Register or login to your account</p>
 
- <div class="card">
-  <h3>YOUR TOTAL POINTS</h3>
-  <div class="points" id="points">0</div>
-  <p class="small">SevenRise Internal Points</p>
- </div>
+    <input
+      id="username"
+      placeholder="Username"
+      autocomplete="username"
+    >
 
- <div class="card">
-  <h3>MINING CENTER</h3>
-  <p id="miningStatus" class="status">Mining belum dimulai</p>
-  <button id="startButton" onclick="startMining()">START MINING</button>
-  <button onclick="claimMining()">CLAIM REWARD +50</button>
- </div>
+    <input
+      id="email"
+      type="email"
+      placeholder="Email address"
+      autocomplete="email"
+    >
 
- <div class="card">
-  <h3>DAILY CHECK-IN</h3>
-  <p>Daily reward: 10 Points</p>
-  <button onclick="dailyCheckin()">CHECK-IN NOW</button>
- </div>
+    <input
+      id="password"
+      type="password"
+      placeholder="Password"
+      autocomplete="current-password"
+    >
 
- <div class="card">
-  <h3>REFERRAL PROGRAM</h3>
-  <p class="small">Bagikan kode referral kamu.</p>
-  <div id="referralCode" class="points">-</div>
-  <button class="secondary" onclick="copyReferral()">COPY REFERRAL</button>
+    <button onclick="registerSVR()">REGISTER</button>
 
-  <input id="referralInput" placeholder="Masukkan kode referral teman">
-  <button onclick="applyReferral()">APPLY REFERRAL</button>
- </div>
+    <button
+      class="secondary"
+      onclick="loginSVR()"
+    >
+      LOGIN
+    </button>
 
- <div class="card">
-  <h3>ACCOUNT</h3>
-  <p id="userEmail" class="small"></p>
-  <button class="secondary" onclick="logoutSVR()">LOGOUT</button>
- </div>
+  </div>
 
-</div>
+  <!-- DASHBOARD -->
 
-<div id="message"></div>
+  <div id="dashboard" class="hidden">
 
-<div class="card">
- <p class="small">
- SevenRise (SVR) is a community ecosystem.
- Points displayed here are internal demo rewards,
- not transferable cryptocurrency tokens.
- </p>
-</div>
+    <!-- POINTS -->
+
+    <div class="card">
+
+      <h3>YOUR TOTAL POINTS</h3>
+
+      <div class="points" id="points">0</div>
+
+      <p class="small">
+        SevenRise Internal Points
+      </p>
+
+    </div>
+
+    <!-- MINING -->
+
+    <div class="card">
+
+      <h3>MINING CENTER</h3>
+
+      <p id="miningStatus" class="status">
+        Mining belum dimulai
+      </p>
+
+      <button
+        id="startButton"
+        onclick="startMining()"
+      >
+        START MINING
+      </button>
+
+      <button
+        class="secondary"
+        onclick="claimMining()"
+      >
+        CLAIM REWARD +50
+      </button>
+
+      <p class="small">
+        Reward 50 points setiap 24 jam.
+      </p>
+
+    </div>
+
+    <!-- DAILY CHECKIN -->
+
+    <div class="card">
+
+      <h3>DAILY CHECK-IN</h3>
+
+      <p>Daily reward: 10 Points</p>
+
+      <button onclick="dailyCheckin()">
+        CHECK-IN NOW
+      </button>
+
+    </div>
+
+    <!-- REFERRAL -->
+
+    <div class="card">
+
+      <h3>REFERRAL PROGRAM</h3>
+
+      <p class="small">
+        Bagikan kode referral kamu.
+      </p>
+
+      <div id="referralCode" class="points">-</div>
+
+      <button
+        class="secondary"
+        onclick="copyReferral()"
+      >
+        COPY REFERRAL
+      </button>
+
+      <input
+        id="referralInput"
+        placeholder="Masukkan kode referral teman"
+      >
+
+      <button onclick="applyReferral()">
+        APPLY REFERRAL
+      </button>
+
+    </div>
+
+    <!-- TON WALLET -->
+
+    <div class="card">
+
+      <h3>TON WALLET</h3>
+
+      <p class="small">
+        Connect your TON wallet to SevenRise.
+      </p>
+
+      <div id="ton-connect"></div>
+
+      <p
+        id="ton-wallet-status"
+        class="status"
+      >
+        Wallet belum terhubung.
+      </p>
+
+      <div
+        id="walletAddressBox"
+        class="wallet-box hidden"
+      >
+        <p class="small">WALLET ADDRESS</p>
+
+        <div id="walletAddress"></div>
+
+        <button
+          class="secondary"
+          onclick="copyWalletAddress()"
+        >
+          COPY ADDRESS
+        </button>
+      </div>
+
+      <p class="small">
+        Koneksi wallet menggunakan TON Connect.
+        Jangan pernah memasukkan seed phrase
+        atau private key.
+      </p>
+
+    </div>
+
+    <!-- ACCOUNT -->
+
+    <div class="card">
+
+      <h3>ACCOUNT</h3>
+
+      <p
+        id="userEmail"
+        class="small"
+      ></p>
+
+      <button
+        class="secondary"
+        onclick="logoutSVR()"
+      >
+        LOGOUT
+      </button>
+
+    </div>
+
+  </div>
+
+  <div id="message"></div>
+
+  <!-- DISCLAIMER -->
+
+  <div class="card">
+
+    <p class="small">
+      SevenRise (SVR) is a community ecosystem.
+      Points displayed here are internal demo rewards,
+      not transferable cryptocurrency tokens.
+    </p>
+
+  </div>
+
+  <div class="footer">
+    © 2026 SevenRise Ecosystem
+  </div>
 
 </div>
 
 <script>
+
+/* =================================
+   SUPABASE CONFIGURATION
+================================= */
+
 const SUPABASE_URL =
 "https://eyhvzkqjnpuepqedvprl.supabase.co";
 
@@ -165,291 +377,564 @@ const SUPABASE_KEY =
 "sb_publishable_8octlvT4wMspfEX14uFMuA_ShwqQYbj";
 
 const db = window.supabase.createClient(
- SUPABASE_URL,
- SUPABASE_KEY
+  SUPABASE_URL,
+  SUPABASE_KEY
 );
+
+
+/* =================================
+   GLOBAL VARIABLES
+================================= */
 
 let currentUser = null;
 let miningTimer = null;
+let tonConnectUI = null;
 
-function msg(text){
- document.getElementById("message").innerText=text;
+
+/* =================================
+   MESSAGE
+================================= */
+
+function msg(text) {
+
+  document.getElementById("message").innerText = text;
+
 }
 
-async function registerSVR(){
 
- const username=document.getElementById("username").value.trim();
- const email=document.getElementById("email").value.trim();
- const password=document.getElementById("password").value;
+/* =================================
+   REGISTER
+================================= */
 
- if(!username || !email || !password){
-  return msg("Lengkapi semua data!");
- }
+async function registerSVR() {
 
- if(password.length<6){
-  return msg("Password minimal 6 karakter!");
- }
+  const username =
+    document.getElementById("username").value.trim();
 
- const {data,error}=await db.auth.signUp({
-  email:email,
-  password:password,
-  options:{
-   data:{username:username}
-  }
- });
+  const email =
+    document.getElementById("email").value.trim();
 
- if(error) return msg(error.message);
+  const password =
+    document.getElementById("password").value;
 
- if(data.session){
-  msg("Registrasi berhasil!");
-  await loadDashboard();
- }else{
-  msg("Registrasi berhasil. Silakan verifikasi email terlebih dahulu.");
- }
-}
-
-async function loginSVR(){
-
- const email=document.getElementById("email").value.trim();
- const password=document.getElementById("password").value;
-
- if(!email || !password){
-  return msg("Masukkan email dan password!");
- }
-
- const {error}=await db.auth.signInWithPassword({
-  email:email,
-  password:password
- });
-
- if(error) return msg(error.message);
-
- msg("Login berhasil!");
- await loadDashboard();
-}
-
-async function loadDashboard(){
-
- const {data:{user},error:authError}=await db.auth.getUser();
-
- if(authError || !user){
-  return;
- }
-
- currentUser=user;
-
- const {data,error}=await db
-  .from("profiles")
-  .select("points,referral_code")
-  .eq("id",user.id)
-  .single();
-
- if(error){
-  return msg("Gagal membaca profil: "+error.message);
- }
-
- document.getElementById("authCard").classList.add("hidden");
- document.getElementById("dashboard").classList.remove("hidden");
-
- document.getElementById("points").innerText=
-  Number(data.points).toLocaleString("id-ID");
-
- document.getElementById("referralCode").innerText=
-  data.referral_code;
-
- document.getElementById("userEmail").innerText=
-  user.email;
-
- await updateMining();
-}
-
-async function refreshPoints(){
-
- if(!currentUser) return;
-
- const {data,error}=await db
-  .from("profiles")
-  .select("points")
-  .eq("id",currentUser.id)
-  .single();
-
- if(!error && data){
-  document.getElementById("points").innerText=
-   Number(data.points).toLocaleString("id-ID");
- }
-}
-
-async function startMining(){
-
- const {data,error}=await db.rpc("start_mining");
-
- if(error) return msg(error.message);
-
- msg("Mining berhasil dimulai selama 24 jam!");
-
- await updateMining();
-}
-
-async function claimMining(){
-
- const {data,error}=await db.rpc("claim_mining");
-
- if(error) return msg(error.message);
-
- msg("Berhasil claim reward 50 poin!");
-
- await refreshPoints();
- await updateMining();
-}
-
-async function dailyCheckin(){
-
- const {data,error}=await db.rpc("daily_checkin");
-
- if(error) return msg(error.message);
-
- msg("Daily Check-in berhasil! +10 Points");
-
- await refreshPoints();
-}
-
-async function updateMining(){
-
- if(!currentUser) return;
-
- const {data,error}=await db
-  .from("mining_sessions")
-  .select("ends_at,claimed_at")
-  .eq("user_id",currentUser.id)
-  .is("claimed_at",null)
-  .order("ends_at",{ascending:false})
-  .limit(1);
-
- if(error) return msg(error.message);
-
- const status=document.getElementById("miningStatus");
- const button=document.getElementById("startButton");
-
- if(!data || data.length===0){
-  status.innerText="Mining belum dimulai";
-  button.disabled=false;
-  clearInterval(miningTimer);
-  return;
- }
-
- const end=new Date(data[0].ends_at);
-
- function countdown(){
-  const remaining=end.getTime()-Date.now();
-
-  if(remaining<=0){
-   status.innerText="Mining selesai! Silakan CLAIM +50.";
-   button.disabled=true;
-   clearInterval(miningTimer);
-   return;
+  if (!username || !email || !password) {
+    return msg("Lengkapi semua data!");
   }
 
-  const hours=Math.floor(remaining/3600000);
-  const minutes=Math.floor((remaining%3600000)/60000);
-  const seconds=Math.floor((remaining%60000)/1000);
+  if (password.length < 6) {
+    return msg("Password minimal 6 karakter!");
+  }
 
-  status.innerText=
-   "MINING ACTIVE • "+
-   hours+"h "+minutes+"m "+seconds+"s";
-  button.disabled=true;
- }
+  const { data, error } = await db.auth.signUp({
 
- clearInterval(miningTimer);
- countdown();
- miningTimer=setInterval(countdown,1000);
-}
+    email: email,
 
-async function applyReferral(){
+    password: password,
 
- const code=document.getElementById("referralInput").value.trim();
-
- if(!code) return msg("Masukkan kode referral!");
-
- const {data,error}=await db.rpc("apply_referral",{
-  code:code
- });
-
- if(error) return msg(error.message);
-
- msg("Referral berhasil diterapkan!");
-
- document.getElementById("referralInput").value="";
-
- await refreshPoints();
-}
-
-async function copyReferral(){
-
- const code=document.getElementById("referralCode").innerText;
-
- if(!code || code==="-") return msg("Login terlebih dahulu!");
-
- try{
-  await navigator.clipboard.writeText(code);
-  msg("Referral code berhasil disalin!");
- }catch(e){
-  msg("Gagal menyalin. Salin kode secara manual.");
- }
-}
-
-async function logoutSVR(){
-
- await db.auth.signOut();
- location.reload();
-}
-
-db.auth.onAuthStateChange((event,session)=>{
- if(session){
-  setTimeout(loadDashboard,0);
- }
-});
-
-loadDashboard();
-</script>
-<section id="sevenrise-ton-wallet" style="
-  background:#151b2b;
-  color:white;
-  padding:20px;
-  margin:20px;
-  border-radius:16px;
-  text-align:center;
-">
-  <h2>TON WALLET</h2>
-  <p>Connect your TON wallet to SevenRise</p>
-
-  <div id="ton-connect"></div>
-
-  <p id="ton-wallet-status">Wallet belum terhubung</p>
-</section>
-
-<script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
-
-<script>
-window.addEventListener("load", function () {
-  const tonUI = new TON_CONNECT_UI.TonConnectUI({
-    manifestUrl:
-      "https://sevenrise.github.io/sevenrise/tonconnect-manifest.json",
-    buttonRootId: "ton-connect"
-  });
-
-  tonUI.onStatusChange(function(wallet) {
-    const status = document.getElementById("ton-wallet-status");
-
-    if (wallet) {
-      const address = wallet.account.address;
-      status.innerText =
-        "Connected: " + address.slice(0, 8) +
-        "..." + address.slice(-8);
-    } else {
-      status.innerText = "Wallet belum terhubung";
+    options: {
+      data: {
+        username: username
+      }
     }
+
   });
+
+  if (error) {
+    return msg(error.message);
+  }
+
+  if (data.session) {
+
+    msg("Registrasi berhasil!");
+
+    await loadDashboard();
+
+  } else {
+
+    msg(
+      "Registrasi berhasil. Silakan verifikasi email."
+    );
+
+  }
+
+}
+
+
+/* =================================
+   LOGIN
+================================= */
+
+async function loginSVR() {
+
+  const email =
+    document.getElementById("email").value.trim();
+
+  const password =
+    document.getElementById("password").value;
+
+  if (!email || !password) {
+    return msg("Masukkan email dan password!");
+  }
+
+  const { error } = await db.auth.signInWithPassword({
+
+    email: email,
+
+    password: password
+
+  });
+
+  if (error) {
+    return msg(error.message);
+  }
+
+  msg("Login berhasil!");
+
+  await loadDashboard();
+
+}
+
+
+/* =================================
+   LOAD DASHBOARD
+================================= */
+
+async function loadDashboard() {
+
+  const {
+    data: { user },
+    error: authError
+  } = await db.auth.getUser();
+
+  if (authError || !user) {
+    return;
+  }
+
+  currentUser = user;
+
+  const { data, error } = await db
+
+    .from("profiles")
+
+    .select("points,referral_code")
+
+    .eq("id", user.id)
+
+    .single();
+
+  if (error) {
+
+    return msg(
+      "Gagal membaca profil: " + error.message
+    );
+
+  }
+
+  document
+    .getElementById("authCard")
+    .classList.add("hidden");
+
+  document
+    .getElementById("dashboard")
+    .classList.remove("hidden");
+
+  document.getElementById("points").innerText =
+    Number(data.points).toLocaleString("id-ID");
+
+  document.getElementById("referralCode").innerText =
+    data.referral_code || "-";
+
+  document.getElementById("userEmail").innerText =
+    user.email || "";
+
+  await updateMining();
+
+}
+
+
+/* =================================
+   REFRESH POINTS
+================================= */
+
+async function refreshPoints() {
+
+  if (!currentUser) return;
+
+  const { data, error } = await db
+
+    .from("profiles")
+
+    .select("points")
+
+    .eq("id", currentUser.id)
+
+    .single();
+
+  if (!error && data) {
+
+    document.getElementById("points").innerText =
+      Number(data.points).toLocaleString("id-ID");
+
+  }
+
+}
+
+
+/* =================================
+   START MINING
+================================= */
+
+async function startMining() {
+
+  const { error } = await db.rpc("start_mining");
+
+  if (error) {
+    return msg(error.message);
+  }
+
+  msg("Mining berhasil dimulai selama 24 jam!");
+
+  await updateMining();
+
+}
+
+
+/* =================================
+   CLAIM MINING
+================================= */
+
+async function claimMining() {
+
+  const { error } = await db.rpc("claim_mining");
+
+  if (error) {
+    return msg(error.message);
+  }
+
+  msg("Berhasil claim reward 50 poin!");
+
+  await refreshPoints();
+
+  await updateMining();
+
+}
+
+
+/* =================================
+   UPDATE MINING
+================================= */
+
+async function updateMining() {
+
+  if (!currentUser) return;
+
+  const { data, error } = await db
+
+    .from("mining_sessions")
+
+    .select("ends_at,claimed_at")
+
+    .eq("user_id", currentUser.id)
+
+    .is("claimed_at", null)
+
+    .order("ends_at", { ascending: false })
+
+    .limit(1);
+
+  if (error) {
+    return msg(error.message);
+  }
+
+  const status =
+    document.getElementById("miningStatus");
+
+  const button =
+    document.getElementById("startButton");
+
+  if (!data || data.length === 0) {
+
+    status.innerText = "Mining belum dimulai";
+
+    button.disabled = false;
+
+    clearInterval(miningTimer);
+
+    return;
+
+  }
+
+  const end = new Date(data[0].ends_at);
+
+  function countdown() {
+
+    const remaining = end.getTime() - Date.now();
+
+    if (remaining <= 0) {
+
+      status.innerText =
+        "Mining selesai! Silakan CLAIM +50.";
+
+      button.disabled = true;
+
+      clearInterval(miningTimer);
+
+      return;
+
+    }
+
+    const hours =
+      Math.floor(remaining / 3600000);
+
+    const minutes =
+      Math.floor((remaining % 3600000) / 60000);
+
+    const seconds =
+      Math.floor((remaining % 60000) / 1000);
+
+    status.innerText =
+      "MINING ACTIVE • " +
+      hours + "h " +
+      minutes + "m " +
+      seconds + "s";
+
+    button.disabled = true;
+
+  }
+
+  clearInterval(miningTimer);
+
+  countdown();
+
+  miningTimer = setInterval(countdown, 1000);
+
+}
+
+
+/* =================================
+   DAILY CHECK-IN
+================================= */
+
+async function dailyCheckin() {
+
+  const { error } = await db.rpc("daily_checkin");
+
+  if (error) {
+    return msg(error.message);
+  }
+
+  msg("Daily Check-in berhasil! +10 Points");
+
+  await refreshPoints();
+
+}
+
+
+/* =================================
+   APPLY REFERRAL
+================================= */
+
+async function applyReferral() {
+
+  const code =
+    document.getElementById("referralInput").value.trim();
+
+  if (!code) {
+    return msg("Masukkan kode referral!");
+  }
+
+  const { error } = await db.rpc("apply_referral", {
+    code: code
+  });
+
+  if (error) {
+    return msg(error.message);
+  }
+
+  msg("Referral berhasil diterapkan!");
+
+  document.getElementById("referralInput").value = "";
+
+  await refreshPoints();
+
+}
+
+
+/* =================================
+   COPY REFERRAL
+================================= */
+
+async function copyReferral() {
+
+  const code =
+    document.getElementById("referralCode").innerText;
+
+  if (!code || code === "-") {
+    return msg("Login terlebih dahulu!");
+  }
+
+  try {
+
+    await navigator.clipboard.writeText(code);
+
+    msg("Referral code berhasil disalin!");
+
+  } catch (error) {
+
+    msg("Gagal menyalin. Salin secara manual.");
+
+  }
+
+}
+
+
+/* =================================
+   TON CONNECT INITIALIZATION
+================================= */
+
+function initTONConnect() {
+
+  if (!window.TON_CONNECT_UI) {
+
+    msg("TON Connect gagal dimuat. Periksa koneksi internet.");
+
+    return;
+
+  }
+
+  try {
+
+    tonConnectUI = new TON_CONNECT_UI.TonConnectUI({
+
+      manifestUrl:
+        "https://sevenrise.github.io/sevenrise/tonconnect-manifest.json",
+
+      buttonRootId: "ton-connect"
+
+    });
+
+    tonConnectUI.onStatusChange(wallet => {
+
+      const status =
+        document.getElementById("ton-wallet-status");
+
+      const addressBox =
+        document.getElementById("walletAddressBox");
+
+      const addressText =
+        document.getElementById("walletAddress");
+
+      if (wallet) {
+
+        const address = wallet.account.address;
+
+        status.innerText =
+          "TON Wallet berhasil terhubung!";
+
+        addressText.innerText = address;
+
+        addressBox.classList.remove("hidden");
+
+      } else {
+
+        status.innerText =
+          "Wallet belum terhubung.";
+
+        addressText.innerText = "";
+
+        addressBox.classList.add("hidden");
+
+      }
+
+    });
+
+  } catch (error) {
+
+    msg("TON Connect Error: " + error.message);
+
+  }
+
+}
+
+
+/* =================================
+   COPY WALLET ADDRESS
+================================= */
+
+async function copyWalletAddress() {
+
+  if (!tonConnectUI) return;
+
+  const wallet = tonConnectUI.wallet;
+
+  if (!wallet) {
+    return msg("Wallet belum terhubung!");
+  }
+
+  try {
+
+    await navigator.clipboard.writeText(
+      wallet.account.address
+    );
+
+    msg("Wallet address berhasil disalin!");
+
+  } catch (error) {
+
+    msg("Gagal menyalin alamat wallet.");
+
+  }
+
+}
+
+
+/* =================================
+   LOGOUT
+================================= */
+
+async function logoutSVR() {
+
+  clearInterval(miningTimer);
+
+  await db.auth.signOut();
+
+  location.reload();
+
+}
+
+
+/* =================================
+   AUTH SESSION
+================================= */
+
+db.auth.onAuthStateChange((event, session) => {
+
+  if (session) {
+
+    setTimeout(() => {
+
+      loadDashboard();
+
+    }, 0);
+
+  }
+
 });
- </script>
+
+
+/* =================================
+   INITIALIZATION
+================================= */
+
+window.addEventListener("load", () => {
+
+  initTONConnect();
+
+  loadDashboard();
+
+});
+
+</script>
+
 </body>
- </html>
+     </html>
